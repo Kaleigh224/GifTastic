@@ -27,9 +27,10 @@
 
             function renderButtons() {
                 $("#tvshow-gifs").empty();
-
                 for (var i = 0; i < tvshow.length; i++) {
-                    $("#tvshow-gifs").append('<button>' + tvshow[i] + '</button>')
+                    var space = tvshow[i].replace(/[ ,]+/g, "+");
+                    $("#tvshow-gifs").append(`<button data-tvshow = ${space}>` + tvshow[i] + '</button>')
+
                 }
             }
 
@@ -46,35 +47,37 @@
             })
 
 
-            $("button").on("click", function () {
-                var show = $(this).attr("data-show");
+            $(document).on("click", "button", function () {
+                var show = $(this).attr("data-tvshow");
+                console.log(show);
                 var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + show + "&api_key=SJhC4vh12gFb94LQZZ15rhBWVOsbcTZU&limit=10";
-
+                console.log("This works.");
                 $.ajax({
                     url: queryURL,
                     method: "GET"
+                }).then(function (response) {
+                    var results = response.data;
+                    console.log(results);
+                    for (var i = 0; i < results.length; i++) {
+                        var gifDiv = $("<div>");
+
+                        var rating = results[i].rating;
+                        var p = $("<p>").text("Rating: " + rating);
+                        var showImage = $("<img>");
+                        showImage.attr("src", results[i].images.fixed_height.url);
+                        showImage.attr("data-state", "animate")
+                        showImage.attr("data-still", results[i].images.fixed_height_still.url);
+                        showImage.attr("data-animate", results[i].images.fixed_height.url);
+
+                        gifDiv.prepend(p);
+                        gifDiv.prepend(showImage);
+
+                        $("#gifs-appear-here").prepend(gifDiv);
+                    }
                 })
+            })
 
 
-                    .then(function (response) {
-                        var results = response.data;
-                        var gifDiv = $("<div>");    
-                        for (var i = 0; i < results.length; i++) {
-                            
-                            var rating = results[i].rating;
-                            var p = $("<p>").text("Rating: " + rating);
-                            var showImage = $("<img>");
-                            showImage.attr("src", results[i].images.fixed_height.url);
-
-                            gifDiv.prepend(p);
-                            gifDiv.prepend(showImage);
-
-                            $("#gifs-appear-here").prepend(gifDiv);
-                        }
-                    })
-            }
-
-$(document).on("click");
             renderButtons();
 
 
