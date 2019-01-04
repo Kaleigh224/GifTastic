@@ -1,74 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>GifTastic</title>
 </head>
 
 <body>
-  <div class="container">
-<div id ="tvshow-gifs"></div>
+    <div class="container">
+        <div id="tvshow-gifs"></div>
 
-  <form id="tvshows-form">
-    <label for="tvshow-input">Add a TV Show!</label>
-    <input type="text" id="tvshow-input">
-    <br>
+        <form id="tvshows-form">
+            <label for="tvshow-input">Add a TV Show!</label>
+            <input type="text" id="tvshow-input">
+            <br>
 
-    <input id="add-show" type="submit" value="Add a TV Show!">
-    </form>
-<div id="gifs-appear-here"></div>
+            <input id="add-show" type="submit" value="Add a TV Show!">
+        </form>
+        <div id="gifs-appear-here"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script type="text/javascript">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript">
 
-// Array of TV shows to be displayed
-var tvshow = ["The Office", "Parks and Recreation", "It's always sunny in Philadelphia", "Firefly", "Friends", "Doug", "Boy Meets World", "Hey Arnold!", "Doctor Who", "Sherlock", "That 70s show", "Fresh Prince of Bel Air"];
+            // Array of TV shows to be displayed
+            var tvshow = ["The Office", "Parks and Recreation", "It's always sunny in Philadelphia", "Firefly", "Friends", "Doug", "Boy Meets World", "Hey Arnold!", "Doctor Who", "Sherlock", "That 70s show", "Fresh Prince of Bel Air"];
 
-function renderButtons() {
-    $("#tvshow-gifs").empty();
+            function renderButtons() {
+                $("#tvshow-gifs").empty();
 
-    for (var i = 0; i < tvshow.length; i++) {
-        $("#tvshow-gifs").append('<button>' + tvshow[i] + '</button>')
-    }
-}
+                for (var i = 0; i < tvshow.length; i++) {
+                    $("#tvshow-gifs").append('<button>' + tvshow[i] + '</button>')
+                }
+            }
 
-$("#add-show").on("click", function(event) {
-    event.preventDefault();
+            $("#add-show").on("click", function (event) {
+                event.preventDefault();
 
-    var tvTitle = $("#tvshow-input").val()
+                var tvTitle = $("#tvshow-input").val()
 
-    tvshow.push(tvTitle);
-    
-    renderButtons();
+                tvshow.push(tvTitle);
 
-    $("button").on("click", function() {
-    var show = $(this).attr("data-show");
-      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + show + "&api_key=SJhC4vh12gFb94LQZZ15rhBWVOsbcTZU";
+                renderButtons();
 
-    $.ajax({
-        url: queryURL,
-        method: "GET"
-    })
-    
-})
-.then(function(response) {
-    var results = response.data;
-    for (var i = 0; i < results.length; i++) {
-        var gifDiv = $("<div>");
 
-        var showImage = $("<img>");
-        showImage.attr("src", results[i].images.fixed_height.url);
+            })
 
-        gifDiv.prepend(showImage);
 
-        $("#gifs-appear-here").prepend(gifDiv);
-    }
-    });
-    
-});
-renderButtons();
+            $("button").on("click", function () {
+                var show = $(this).attr("data-show");
+                var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + show + "&api_key=SJhC4vh12gFb94LQZZ15rhBWVOsbcTZU&limit=10";
 
-</script>
-  </div>
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                })
+
+
+                    .then(function (response) {
+                        var results = response.data;
+                        var gifDiv = $("<div>");    
+                        for (var i = 0; i < results.length; i++) {
+                            
+                            var rating = results[i].rating;
+                            var p = $("<p>").text("Rating: " + rating);
+                            var showImage = $("<img>");
+                            showImage.attr("src", results[i].images.fixed_height.url);
+
+                            gifDiv.prepend(p);
+                            gifDiv.prepend(showImage);
+
+                            $("#gifs-appear-here").prepend(gifDiv);
+                        }
+                    })
+            }
+
+$(document).on("click");
+            renderButtons();
+
+
+        </script>
+    </div>
 </body>
+
 </html>
