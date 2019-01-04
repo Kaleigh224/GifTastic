@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GifTastic</title>
+</head>
+
+<body>
+  <div class="container">
+<div id ="tvshow-gifs"></div>
+
+  <form id="tvshows-form">
+    <label for="tvshow-input">Add a TV Show!</label>
+    <input type="text" id="tvshow-input">
+    <br>
+
+    <input id="add-show" type="submit" value="Add a TV Show!">
+    </form>
+<div id="gifs-appear-here"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+// Array of TV shows to be displayed
+var tvshow = ["The Office", "Parks and Recreation", "It's always sunny in Philadelphia", "Firefly", "Friends", "Doug", "Boy Meets World", "Hey Arnold!", "Doctor Who", "Sherlock", "That 70s show", "Fresh Prince of Bel Air"];
+
+function renderButtons() {
+    $("#tvshow-gifs").empty();
+
+    for (var i = 0; i < tvshow.length; i++) {
+        $("#tvshow-gifs").append('<button>' + tvshow[i] + '</button>')
+    }
+}
+
+$("#add-show").on("click", function(event) {
+    event.preventDefault();
+
+    var tvTitle = $("#tvshow-input").val()
+
+    tvshow.push(tvTitle);
+    
+    renderButtons();
+
+    $("button").on("click", function() {
+    var show = $(this).attr("data-show");
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + show + "&api_key=SJhC4vh12gFb94LQZZ15rhBWVOsbcTZU";
+
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    })
+    
+})
+.then(function(response) {
+    var results = response.data;
+    for (var i = 0; i < results.length; i++) {
+        var gifDiv = $("<div>");
+
+        var showImage = $("<img>");
+        showImage.attr("src", results[i].images.fixed_height.url);
+
+        gifDiv.prepend(showImage);
+
+        $("#gifs-appear-here").prepend(gifDiv);
+    }
+    });
+    
+});
+renderButtons();
+
+</script>
+  </div>
+</body>
+</html>
