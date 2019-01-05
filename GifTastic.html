@@ -49,15 +49,15 @@
 
             $(document).on("click", "button", function () {
                 var show = $(this).attr("data-tvshow");
-                console.log(show);
+
                 var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + show + "&api_key=SJhC4vh12gFb94LQZZ15rhBWVOsbcTZU&limit=10";
-                console.log("This works.");
+
                 $.ajax({
                     url: queryURL,
                     method: "GET"
                 }).then(function (response) {
                     var results = response.data;
-                    console.log(results);
+
                     for (var i = 0; i < results.length; i++) {
                         var gifDiv = $("<div>");
 
@@ -73,14 +73,33 @@
                         gifDiv.prepend(showImage);
 
                         $("#gifs-appear-here").prepend(gifDiv);
+
+
                     }
-                })
-            })
+                    $("button").on("click", function () { 
+                if (state === "still") {
+                        var animatedURL = $(this).attr("data-animate");
+                        $(this).attr("src", animatedURL);
+                        $(this).attr("data-state", "animate");
+                    } else if (state === "animate") {
+                        var stillURL = $(this).attr("data-still");
+                        $(this).attr("src", stillURL);
+                        $(this).attr("data-state", "still");
+                    } else {
+                        alert("This should never happen");
+                    }
+                });
+            });
+
+
+
 
 
             renderButtons();
 
-
+         
+        
+        });
         </script>
     </div>
 </body>
