@@ -63,7 +63,7 @@
 
                         var rating = results[i].rating;
                         var p = $("<p>").text("Rating: " + rating);
-                        var showImage = $("<img>");
+                        var showImage = $("<img class='gif'>");
                         showImage.attr("src", results[i].images.fixed_height.url);
                         showImage.attr("data-state", "animate")
                         showImage.attr("data-still", results[i].images.fixed_height_still.url);
@@ -76,30 +76,24 @@
 
 
                     }
-                    $("button").on("click", function () { 
-                if (state === "still") {
-                        var animatedURL = $(this).attr("data-animate");
-                        $(this).attr("src", animatedURL);
-                        $(this).attr("data-state", "animate");
-                    } else if (state === "animate") {
-                        var stillURL = $(this).attr("data-still");
-                        $(this).attr("src", stillURL);
-                        $(this).attr("data-state", "still");
-                    } else {
-                        alert("This should never happen");
-                    }
+                    
                 });
             });
-
-
-
-
-
+            $(document).on("click", ".gif", function () {
+                        var state = $(this).attr("data-state");
+                        if (state === "still") {
+                            var animatedURL = $(this).attr("data-animate");
+                            $(this).attr("src", animatedURL);
+                            $(this).attr("data-state", "animate");
+                        } else if (state === "animate") {
+                            var stillURL = $(this).attr("data-still");
+                            $(this).attr("src", stillURL);
+                            $(this).attr("data-state", "still");
+                        } else {
+                            alert("This should never happen");
+                        }
+                    });
             renderButtons();
-
-         
-        
-        });
         </script>
     </div>
 </body>
